@@ -1,0 +1,9 @@
+---
+import { FEATURED_AIRPORTS, formatPrice, formatTraffic, getLowestEntryPlan, getRecommendationScore } from '@/data/airports';
+---
+<section class="py-14 bg-white border-b border-slate-200/60" aria-labelledby="top-airports-title">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-end justify-between gap-4 mb-8"><div><h2 id="top-airports-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900">TOP 6 推荐</h2><p class="text-sm text-slate-600 mt-2">按本站固定人工推荐顺序展示，不等同于实测评分。</p></div><a href="/ranking/" class="hidden sm:block text-xs font-semibold text-blue-600">排名说明 →</a></div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">{FEATURED_AIRPORTS.map(a=>{const p=getLowestEntryPlan(a);const rating=getRecommendationScore(a);return <a href={`/airports/${a.slug}/`} class="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/50 p-4 hover:border-blue-200 hover:bg-white transition-colors"><span class={`shrink-0 h-9 w-9 rounded-lg flex items-center justify-center font-extrabold ${a.rank<=3?'bg-blue-600 text-white':'bg-blue-50 text-blue-700'}`}>{a.rank}</span><span class="min-w-0 flex-1"><strong class="block text-sm text-slate-900 truncate">{a.name}</strong><small class="block text-slate-500 mt-1">{formatPrice(p)} · {formatTraffic(p)}</small>{rating!==null&&<small class="block text-blue-700 font-bold mt-1">{rating.toFixed(1)} / 10</small>}</span><span class="text-blue-500">→</span></a>})}</div>
+  </div>
+</section>

@@ -1,0 +1,28 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import AirportRankingTable from '@/components/home/AirportRankingTable.astro';
+import { AIRPORTS } from '@/data/airports';
+
+const breadcrumbs = [{ name: '机场排行榜' }];
+---
+
+<Layout
+  title="2026 机场推荐排行榜与对比表格 - 飞渡机场"
+  description={`飞渡机场完整收录 ${AIRPORTS.length} 个机场的固定推荐顺序，对比套餐价格、付款周期、月流量以及公开参考线路和平台支持。`}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mb-8">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+        2026 机场推荐排行榜
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+        排名采用本站固定推荐顺序，不等同于实测评分。价格、付款周期和流量来自已录入套餐；线路及平台支持为公开参考，实际可用性以使用结果为准。
+      </p>
+    </header>
+
+    <AirportRankingTable airports={AIRPORTS} full />
+  </div>
+</Layout>

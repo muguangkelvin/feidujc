@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+
+const breadcrumbs = [{ name: '博客文章' }];
+
+const allPosts = await getCollection('blog', (post) => !post.data.draft && post.data.category !== 'reviews');
+const sortedPosts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout
+  title="博客全部文章 - 飞渡机场"
+  description="飞渡机场博客文章全集，收录所有机场实测、新手教程与客户端配置说明。"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+        博客全部文章
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+        浏览全站所有评测与教程文章。
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sortedPosts.map((post) => (
+        <ArticleCard post={post} />
+      ))}
+    </div>
+  </div>
+</Layout>

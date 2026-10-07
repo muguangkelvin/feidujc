@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+
+const breadcrumbs = [{ name: '标签索引' }];
+
+const posts = await getCollection('blog', (post) => !post.data.draft && post.data.category !== 'reviews');
+
+const tagCounts: Record<string, number> = {};
+posts.forEach((post) => {
+  post.data.tags.forEach((tag) => {
+    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+  });
+});
+
+const sortedTags = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]);
+---
+
+<Layout
+  title="标签索引 - 飞渡机场"
+  description="飞渡机场所有文章标签汇总，方便根据主题快速检索相关机场测评与教程。"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+        文章标签索引
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+        点击下方标签，快速浏览该主题下的全套测评与教程文章。
+      </p>
+    </header>
+
+    <div class="flex flex-wrap gap-3">
+      {
+        sortedTags.map(([tag, count]) => (
+          <a
+            href={`/tags/${tag}/`}
+            class="px-4 py-2 rounded-xl bg-white border border-slate-200 hover:border-blue-300 hover:bg-blue-50/50 text-sm font-semibold text-slate-700 hover:text-blue-600 transition-all flex items-center gap-2 shadow-2xs"
+          >
+            <span>#{tag}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-normal">
+              {count}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Layout>

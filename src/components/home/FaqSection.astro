@@ -1,0 +1,99 @@
+---
+const faqs = [
+  {
+    question: "机场应该怎么选择？",
+    answer: "先明确每月流量、常用设备和主要用途，再比较价格、线路与稳定性。优先短周期购买，并结合真实使用环境验证。"
+  },
+  {
+    question: "价格越贵一定越好吗？",
+    answer: "不一定。价格会受到线路、流量、服务和运营成本影响，但更重要的是套餐是否适合你的网络环境与实际需求。"
+  },
+  {
+    question: "应该购买多少流量？",
+    answer: "轻度网页浏览通常需要较少流量，高清视频与多设备使用会明显增加消耗。建议先查看现有设备的月度统计，再留出适当余量。"
+  },
+  {
+    question: "AI 支持是什么意思？",
+    answer: "通常表示特定节点能否正常访问相关 AI 服务。可用性会受 IP、地区和服务规则变化影响，应以近期实际测试为准。"
+  },
+  {
+    question: "流媒体解锁是什么意思？",
+    answer: "指节点能否访问特定地区的流媒体内容库。解锁状态可能随平台策略和节点 IP 变化，不能只依据长期不更新的宣传。"
+  },
+  {
+    question: "不同设备应该使用什么客户端？",
+    answer: "应选择与订阅格式和系统兼容的客户端。Windows、Android、iOS 与 macOS 的可选工具不同，请先查看服务商说明和本站对应教程。"
+  }
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+---
+
+<section id="faq" class="py-16 bg-white">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        常见问题 (FAQ)
+      </h2>
+      <p class="text-sm text-slate-600 mt-2">
+        关于机场选购、订阅导入与客户端使用的基础问答
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      {
+        faqs.map((faq, index) => (
+          <div class="border border-slate-200 rounded-2xl overflow-hidden transition-colors bg-slate-50/50">
+            <button
+              type="button"
+              class="faq-toggle w-full px-6 py-4 text-left flex items-center justify-between font-semibold text-slate-900 text-sm sm:text-base hover:text-blue-600 transition-colors focus:outline-none"
+              aria-expanded="false"
+              data-target={`faq-answer-${index}`}
+            >
+              <span>{faq.question}</span>
+              <svg class="faq-icon w-5 h-5 text-slate-400 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </button>
+            <div id={`faq-answer-${index}`} class="hidden px-6 pb-5 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+              {faq.answer}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<script>
+  document.querySelectorAll('.faq-toggle').forEach((button) => {
+    button.addEventListener('click', () => {
+      const targetId = button.getAttribute('data-target');
+      if (!targetId) return;
+      const answer = document.getElementById(targetId);
+      const icon = button.querySelector('.faq-icon');
+
+      const isOpen = !answer?.classList.contains('hidden');
+
+      if (isOpen) {
+        answer?.classList.add('hidden');
+        icon?.classList.remove('rotate-180');
+        button.setAttribute('aria-expanded', 'false');
+      } else {
+        answer?.classList.remove('hidden');
+        icon?.classList.add('rotate-180');
+        button.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>

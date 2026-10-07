@@ -1,0 +1,69 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { AIRPORTS } from '@/data/airports';
+
+export interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+
+const displayDate = post.data.updated ?? post.data.date;
+const formattedDate = displayDate.toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const categoryLabels: Record<string, string> = {
+  airports: '机场推荐',
+  reviews: '机场测评',
+  comparisons: '机场对比',
+  guides: '新手教程',
+  clients: '客户端教程',
+  general: '综合资讯',
+  faq: '常见问题',
+};
+
+const categoryLabel = categoryLabels[post.data.category] || post.data.category;
+const reviewAirport = post.data.category === 'reviews'
+  ? AIRPORTS.find((airport) => [airport.name, airport.englishName, ...airport.aliases].filter(Boolean).some((term) => post.data.title.includes(term as string) || post.data.tags.includes(term as string)))
+  : undefined;
+const postUrl = reviewAirport ? `/reviews/${reviewAirport.slug}/` : `/${post.data.category}/${post.id}/`;
+const wordCount = post.body?.replace(/[#>*_`\[\]()-]/g, '').length ?? 0;
+const readingMinutes = Math.max(1, Math.ceil(wordCount / 400));
+---
+
+<article class="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between group">
+  <div>
+    <!-- Category & Date Header -->
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <span class="px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100/80">
+        {categoryLabel}
+      </span>
+      <time datetime={displayDate.toISOString()} class="text-xs text-slate-400 whitespace-nowrap">
+        更新于 {formattedDate}
+      </time>
+    </div>
+
+    <!-- Article Title -->
+    <h3 class="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2 mb-2 leading-snug">
+      <a href={postUrl}>
+        {post.data.title}
+      </a>
+    </h3>
+
+    <!-- Description -->
+    <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed mb-4">
+      {post.data.description}
+    </p>
+  </div>
+
+  <!-- Tags & Footer -->
+  <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3 text-xs text-slate-500">
+    <span class="whitespace-nowrap">约 {readingMinutes} 分钟</span>
+    <a href={postUrl} class="font-semibold text-blue-600 group-hover:text-blue-700 flex items-center gap-0.5">
+      阅读全文 <span class="group-hover:translate-x-0.5 transition-transform">→</span>
+    </a>
+  </div>
+</article>

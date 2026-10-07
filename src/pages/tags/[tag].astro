@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', (post) => !post.data.draft && post.data.category !== 'reviews');
+  const tags = new Set<string>();
+  posts.forEach((post) => post.data.tags.forEach((tag) => tags.add(tag)));
+
+  return Array.from(tags).map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts.filter((p) => p.data.tags.includes(tag)),
+    },
+  }));
+}
+
+const { tag, posts } = Astro.props;
+const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const breadcrumbs = [
+  { name: '标签', url: '/tags/' },
+  { name: `#${tag}` },
+];
+---
+
+<Layout
+  title={`含标签 #${tag} 的文章列表 - 飞渡机场`}
+  description={`关于 #${tag} 的机场测评、使用教程与技术选型文章汇总。`}
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mb-10">
+      <div class="inline-block px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-semibold mb-2">
+        标签筛选
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+        #{tag}
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+        共计找到 {posts.length} 篇相关文章。
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {sortedPosts.map((post) => (
+        <ArticleCard post={post} />
+      ))}
+    </div>
+  </div>
+</Layout>

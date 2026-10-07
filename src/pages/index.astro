@@ -1,0 +1,55 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Hero from '@/components/home/Hero.astro';
+import SiteFeatures from '@/components/home/SiteFeatures.astro';
+import SelectionGuideArticle from '@/components/home/SelectionGuideArticle.astro';
+import FeaturedAirports from '@/components/home/FeaturedAirports.astro';
+import TopAirports from '@/components/home/TopAirports.astro';
+import AirportRankingTable from '@/components/home/AirportRankingTable.astro';
+import ChoosingGuide from '@/components/home/ChoosingGuide.astro';
+import LatestReviews from '@/components/home/LatestReviews.astro';
+import BeginnerGuides from '@/components/home/BeginnerGuides.astro';
+import FaqSection from '@/components/home/FaqSection.astro';
+import { SITE } from '@/config/site';
+
+const homepageSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": SITE.name,
+  "url": SITE.url,
+  "description": SITE.description
+};
+---
+
+<Layout
+  title={SITE.title}
+  description={SITE.description}
+  canonicalUrl={`${SITE.url}/`}
+  jsonLd={homepageSchema}
+>
+  <!-- Hero Section -->
+  <Hero />
+
+  <SiteFeatures />
+
+  <SelectionGuideArticle />
+
+  <!-- ① 2026 热门机场推荐 -->
+  <FeaturedAirports />
+
+  <TopAirports />
+
+  <!-- ② 机场推荐排行榜 -->
+  <AirportRankingTable />
+
+  <ChoosingGuide />
+
+  <!-- ③ 最新机场实测 -->
+  <LatestReviews />
+
+  <!-- ⑥ 新手教程 -->
+  <BeginnerGuides />
+
+  <!-- ⑥ FAQ -->
+  <FaqSection />
+</Layout>

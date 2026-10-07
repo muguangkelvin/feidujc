@@ -1,0 +1,21 @@
+---
+import AirportReviewCard from '@/components/reviews/AirportReviewCard.astro';
+import { AIRPORTS } from '@/data/airports';
+
+const latestReviews = AIRPORTS.slice().sort((a, b) => b.lastVerified.localeCompare(a.lastVerified) || a.rank - b.rank).slice(0, 3);
+---
+
+<section class="py-16 bg-slate-50 border-b border-slate-200/60">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">最新机场测评</h2>
+        <p class="text-sm text-slate-600 mt-2">持续整理套餐分析与测试记录；未完成的测试不会提前给出结论</p>
+      </div>
+      <a href="/reviews/" class="inline-flex items-center text-xs font-semibold text-blue-600 hover:text-blue-700">查看全部测评文章 →</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {latestReviews.map((airport) => <AirportReviewCard airport={airport} />)}
+    </div>
+  </div>
+</section>

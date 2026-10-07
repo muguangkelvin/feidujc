@@ -1,0 +1,79 @@
+---
+import { SITE } from '@/config/site';
+---
+
+<footer class="bg-slate-900 text-slate-400 text-sm border-t border-slate-800 mt-auto">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+      <!-- Brand & Mission -->
+      <div class="md:col-span-1 space-y-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-base">
+            飞
+          </div>
+          <span class="text-lg font-bold text-white tracking-tight">{SITE.name}</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          专注于机场客观测评、排行榜对比、新手入门指南与客户端配置教程。帮助新手快速选出稳定、性价比较高的接入服务。
+        </p>
+      </div>
+
+      <!-- Quick Nav Links -->
+      <div>
+        <h3 class="text-xs font-semibold text-slate-200 tracking-wider mb-3">机场内容</h3>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/" class="hover:text-blue-400 transition-colors">首页</a></li>
+          <li><a href="/airports/" class="hover:text-blue-400 transition-colors">机场推荐</a></li>
+          <li><a href="/ranking/" class="hover:text-blue-400 transition-colors">机场推荐排行榜</a></li>
+          <li><a href="/reviews/" class="hover:text-blue-400 transition-colors">最新机场实测</a></li>
+          <li><a href="/guides/" class="hover:text-blue-400 transition-colors">新手入门指南</a></li>
+        </ul>
+      </div>
+
+      <!-- Client Guides Links -->
+      <div>
+        <h3 class="text-xs font-semibold text-slate-200 tracking-wider mb-3">使用教程</h3>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/clients/windows/" class="hover:text-blue-400 transition-colors">Windows 客户端教程</a></li>
+          <li><a href="/clients/" class="hover:text-blue-400 transition-colors">macOS 客户端教程</a></li>
+          <li><a href="/clients/" class="hover:text-blue-400 transition-colors">Android 客户端教程</a></li>
+          <li><a href="/clients/" class="hover:text-blue-400 transition-colors">iOS 客户端教程</a></li>
+        </ul>
+      </div>
+
+      <!-- Site Links & Meta -->
+      <div>
+        <h3 class="text-xs font-semibold text-slate-200 tracking-wider mb-3">关于本站</h3>
+        <ul class="space-y-2 text-xs">
+          <li><a href="/about/" class="hover:text-blue-400 transition-colors">关于本站</a></li>
+          <li><a href="/affiliate/" class="hover:text-blue-400 transition-colors">推广声明</a></li>
+          <li><a href="/privacy/" class="hover:text-blue-400 transition-colors">隐私政策</a></li>
+          <li><a href="/disclaimer/" class="hover:text-blue-400 transition-colors">免责声明</a></li>
+          <li>
+            <a
+              href="https://t.me/+rthlhpWiKOtlZjJl"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="加入飞渡机场 Telegram"
+              title="加入 Telegram"
+              class="inline-flex items-center gap-1.5 hover:text-blue-400 transition-colors"
+            >
+              <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M21.7 3.2a1.2 1.2 0 0 0-1.25-.2L3.1 9.75a1.2 1.2 0 0 0 .08 2.27l4.38 1.46 1.65 5.16a1.2 1.2 0 0 0 2.08.4l2.4-2.93 4.7 3.45a1.2 1.2 0 0 0 1.88-.74l2.12-14.5a1.2 1.2 0 0 0-.69-1.12ZM9.42 12.84l8.36-5.27-6.8 6.51-.53 2.52-1.03-3.76Z" />
+              </svg>
+              <span>Telegram 社群 ↗</span>
+            </a>
+          </li>
+          <li><a href="/sitemap.xml" class="hover:text-blue-400 transition-colors" target="_blank">站点地图 (Sitemap)</a></li>
+          <li><a href="/robots.txt" class="hover:text-blue-400 transition-colors" target="_blank">Robots.txt</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Disclaimer & Copyright -->
+    <div class="pt-8 border-t border-slate-800 text-center md:flex md:items-center md:justify-between text-xs text-slate-500">
+      <p>© 2026 {SITE.name}</p>
+      <p class="mt-2 md:mt-0 text-slate-500">部分外部链接含推广参数，可能为本站带来收益。</p>
+    </div>
+  </div>
+</footer>

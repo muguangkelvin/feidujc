@@ -1,0 +1,103 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import { AIRPORTS } from '@/data/airports';
+
+const posts = await getCollection('blog', (post) => !post.data.draft);
+const recentPosts = posts
+  .slice()
+  .sort((a, b) => (b.data.updated ?? b.data.date).valueOf() - (a.data.updated ?? a.data.date).valueOf())
+  .slice(0, 4);
+
+const postUrl = (post: (typeof recentPosts)[number]) => {
+  if (post.data.category === 'reviews') {
+    const airport = AIRPORTS.find((item) => [item.name, item.englishName, ...item.aliases]
+      .filter(Boolean)
+      .some((term) => post.data.title.includes(term as string) || post.data.tags.includes(term as string)));
+    if (airport) return `/reviews/${airport.slug}/`;
+  }
+  if (post.data.category === 'guides') return `/guides/${post.id}/`;
+  if (post.data.category === 'clients') return `/clients/${post.id}/`;
+  return `/blog/${post.id}/`;
+};
+
+const commonLinks = [
+  { label: '机场推荐', href: '/airports/' },
+  { label: '机场排行榜', href: '/ranking/' },
+  { label: '机场实测', href: '/reviews/' },
+  { label: '新手教程', href: '/guides/' },
+  { label: '客户端教程', href: '/clients/' },
+];
+
+const beginnerLinks = [
+  { label: '机场是什么', href: '/guides/what-is-airport/' },
+  { label: '如何选择机场', href: '/guides/how-to-choose/' },
+  { label: '订阅链接怎么使用', href: '/guides/how-to-use-subscription/' },
+  { label: '节点怎么选择', href: '/guides/how-to-choose-node/' },
+];
+
+const clientLinks = [
+  { label: 'Windows', href: '/clients/windows/' },
+  { label: 'macOS', href: '/clients/macos/' },
+  { label: 'Android', href: '/clients/android/' },
+  { label: 'iOS', href: '/clients/ios/' },
+];
+---
+
+<Layout title="个人中心" description="管理你的阅读入口、常用工具与站内内容。" canonicalUrl="https://feidujc.com/profile/">
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+    <Breadcrumbs items={[{ name: '个人中心' }]} />
+
+    <header class="relative overflow-hidden rounded-3xl border border-blue-100 bg-gradient-to-br from-white via-blue-50 to-sky-100 p-6 shadow-xs sm:p-10">
+      <div class="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-blue-200/30 blur-3xl" aria-hidden="true"></div>
+      <div class="relative max-w-2xl">
+        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-sm">
+          <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20 21a8 8 0 0 0-16 0M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+          </svg>
+        </div>
+        <p class="mt-5 text-sm font-semibold text-blue-600">欢迎回来</p>
+        <h1 class="mt-1 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">个人中心</h1>
+        <p class="mt-3 max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">管理你的阅读入口、常用工具与站内内容。快速访问常用教程、机场推荐与最近更新内容。</p>
+      </div>
+    </header>
+
+    <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+      <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6" aria-labelledby="common-links-heading">
+        <h2 id="common-links-heading" class="text-lg font-bold text-slate-900">我的常用入口</h2>
+        <p class="mt-1 text-xs text-slate-500">快速进入站内主要内容。</p>
+        <div class="mt-5 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {commonLinks.map((link) => <a href={link.href} class="group flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><span>{link.label}</span><span class="text-blue-400 transition-transform group-hover:translate-x-0.5">→</span></a>)}
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6" aria-labelledby="beginner-links-heading">
+        <h2 id="beginner-links-heading" class="text-lg font-bold text-slate-900">新手快速入口</h2>
+        <p class="mt-1 text-xs text-slate-500">从基础概念到实际选择逐步了解。</p>
+        <div class="mt-5 space-y-2">
+          {beginnerLinks.map((link) => <a href={link.href} class="group flex items-center justify-between rounded-xl px-3 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><span>{link.label}</span><span class="text-blue-400 transition-transform group-hover:translate-x-0.5">→</span></a>)}
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6" aria-labelledby="client-links-heading">
+        <h2 id="client-links-heading" class="text-lg font-bold text-slate-900">客户端下载与教程</h2>
+        <p class="mt-1 text-xs text-slate-500">按照当前设备查看对应使用教程。</p>
+        <div class="mt-5 grid grid-cols-2 gap-3">
+          {clientLinks.map((link) => <a href={link.href} class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-4 text-center text-sm font-semibold text-slate-700 transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500">{link.label}</a>)}
+        </div>
+      </section>
+
+      <section class="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs sm:p-6" aria-labelledby="recent-heading">
+        <h2 id="recent-heading" class="text-lg font-bold text-slate-900">最近更新</h2>
+        <p class="mt-1 text-xs text-slate-500">内容直接来自当前文章数据。</p>
+        <div class="mt-5 divide-y divide-slate-100">
+          {recentPosts.map((post) => {
+            const updated = post.data.updated ?? post.data.date;
+            return <a href={postUrl(post)} class="group flex items-start justify-between gap-4 py-3 first:pt-0 last:pb-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"><span class="min-w-0"><strong class="line-clamp-2 text-sm text-slate-800 transition-colors group-hover:text-blue-700">{post.data.title}</strong><small class="mt-1 block text-slate-400">更新于 {updated.toLocaleDateString('zh-CN')}</small></span><span class="shrink-0 text-blue-400 transition-transform group-hover:translate-x-0.5">→</span></a>;
+          })}
+        </div>
+      </section>
+    </div>
+  </div>
+</Layout>

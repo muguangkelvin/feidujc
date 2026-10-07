@@ -1,0 +1,120 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import { AIRPORTS, formatPrice, formatTraffic, getRecommendationScore, monthlyEquivalent, trafficInGb, type Airport, type AirportPlan } from '@/data/airports';
+import { getAirportReviewMeta } from '@/data/reviews';
+import { SITE } from '@/config/site';
+
+export function getStaticPaths() {
+  return AIRPORTS.map((airport) => ({ params: { slug: airport.slug }, props: { airport } }));
+}
+
+interface Props { airport: Airport }
+const { airport } = Astro.props;
+const meta = getAirportReviewMeta(airport);
+const canonical = `${SITE.url}/reviews/${airport.slug}/`;
+const displayName = airport.englishName && airport.englishName.toLowerCase() !== airport.name.toLowerCase() ? `${airport.name}（${airport.englishName}）` : airport.name;
+const score = getRecommendationScore(airport);
+const statusLabel = (value: boolean) => value ? '支持' : '不支持';
+const aiRows = ([['ChatGPT', airport.capabilities.ai.chatgpt], ['Claude', airport.capabilities.ai.claude], ['Gemini', airport.capabilities.ai.gemini]] as const).flatMap(([name,value])=>value===null?[]:[[name,value] as const]);
+const streamingRows = ([['Netflix', airport.capabilities.streaming.netflix], ['Disney+', airport.capabilities.streaming.disneyPlus], ['YouTube', airport.capabilities.streaming.youtube], ['TikTok', airport.capabilities.streaming.tiktok]] as const).flatMap(([name,value])=>value===null?[]:[[name,value] as const]);
+const billingLabel = (plan: AirportPlan) => plan.billingCycle === 'year' ? '年付' : '月付';
+const planFit = (plan: AirportPlan, index: number) => {
+  const position = index === 0 ? '流量需求相对较轻' : index === airport.plans.length - 1 ? '月度流量需求较高' : '希望在预算与流量之间取得平衡';
+  const payment = plan.billingCycle === 'year' ? `需要一次支付全年费用，折算约 ¥${monthlyEquivalent(plan).toFixed(2).replace(/\.00$/, '')}/月` : '采用月付周期，便于先进行短期验证';
+  return `${formatPrice(plan)}提供${formatTraffic(plan)}，可以由${position}的用户重点比较；${payment}。是否合适仍需结合自己的实际用量。`;
+};
+const advantages = airport.plans.length ? [
+  `已公开 ${airport.plans.length} 档套餐，可直接比较价格、付款周期与月流量。`,
+  airport.plans.some((plan) => plan.billingCycle === 'year') ? '同时存在年付方案，可与月付套餐比较总支出和付款周期。' : '已收录套餐均为月付，适合先用较短周期观察实际表现。',
+  `公开参考线路标注为“${airport.capabilities.line.display}”，具体表现仍需在本地网络中验证。`,
+] : ['页面已建立稳定测评入口，后续可靠资料可直接补充到统一机场数据源。'];
+const cautions = [
+  airport.plans.length ? '套餐价格和流量可能调整，购买前应以官网实时信息为准。' : '套餐价格、周期和流量尚无可靠资料，当前不适合仅凭价格作决定。',
+  airport.capabilities.evidenceLevel === 'feidu_test' ? '测试结果仍会受到地区、运营商、设备和测试时段影响。' : '线路、AI 与流媒体信息来自公开资料参考，不代表飞渡机场自行实测。',
+  'AI 和流媒体可用性可能随节点、出口 IP 与平台策略变化。',
+];
+const suitability = airport.plans.length
+  ? `从已收录套餐看，${airport.name}提供的月流量范围为 ${formatTraffic(airport.plans.reduce((a, b) => trafficInGb(a) < trafficInGb(b) ? a : b))} 至 ${formatTraffic(airport.plans.reduce((a, b) => trafficInGb(a) > trafficInGb(b) ? a : b))}。流量较轻的用户可先比较低门槛方案，需要更大余量时再看高档方案；不要只因排名或单个参数直接购买长期套餐。`
+  : `${airport.name}目前缺少可靠套餐资料，暂时无法根据价格和流量判断适合人群。建议等待资料更新，或在官网核对套餐后先选择可控的短周期方案。`;
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Article', headline: meta.title, description: meta.description, datePublished: airport.lastVerified, dateModified: airport.lastVerified, author: { '@type': 'Organization', name: SITE.name, url: SITE.url }, publisher: { '@type': 'Organization', name: SITE.name, url: SITE.url }, mainEntityOfPage: { '@type': 'WebPage', '@id': canonical } },
+    { '@type': 'BreadcrumbList', itemListElement: [
+      { '@type': 'ListItem', position: 1, name: '首页', item: `${SITE.url}/` },
+      { '@type': 'ListItem', position: 2, name: '机场测评', item: `${SITE.url}/reviews/` },
+      { '@type': 'ListItem', position: 3, name: airport.name, item: canonical },
+    ] },
+  ],
+};
+---
+
+<Layout title={meta.title} description={meta.description} canonicalUrl={canonical} type="article" publishDate={new Date(airport.lastVerified)} updatedDate={new Date(airport.lastVerified)} jsonLd={graph}>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <Breadcrumbs items={[{ name: '机场测评', url: '/reviews/' }, { name: airport.name }]} />
+    <article class="mx-auto max-w-5xl rounded-3xl border border-slate-200 bg-white p-6 shadow-xs sm:p-10">
+      <header class="border-b border-slate-200 pb-8">
+        <div class="flex flex-wrap items-center gap-2 text-xs"><span class="rounded-md bg-blue-50 px-3 py-1 font-semibold text-blue-700">机场测评</span><span class="text-slate-400">推荐排名 TOP {airport.rank}</span><time datetime={airport.lastVerified} class="text-slate-400">更新于 {airport.lastVerified}</time></div>
+        <h1 class="mt-4 text-2xl sm:text-4xl font-extrabold leading-tight text-slate-900">{meta.title}</h1>
+        <p class="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm sm:text-base leading-relaxed text-slate-600">{meta.description}</p>
+        <p class="mt-3 text-xs text-slate-500">本文依据统一机场数据与公开资料整理。只有证据等级标记为飞渡实测的数据才会作为本站测试结果。</p>
+      </header>
+
+      <div class="prose-custom max-w-none mt-8">
+        <h2>基本信息</h2>
+        <div class="not-prose grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 my-5">
+          <div class="rounded-xl border border-slate-200 p-4"><div class="text-xs text-slate-400">机场名称</div><div class="mt-1 font-bold text-slate-900">{displayName}</div></div>
+          <div class="rounded-xl border border-slate-200 p-4"><div class="text-xs text-slate-400">当前推荐排名</div><div class="mt-1 font-bold text-slate-900">TOP {airport.rank}</div></div>
+          {score !== null && <div class="rounded-xl border border-slate-200 p-4"><div class="text-xs text-slate-400">综合推荐评分</div><div class="mt-1 font-bold text-slate-900">{score}/10</div></div>}
+          <div class="rounded-xl border border-slate-200 p-4"><div class="text-xs text-slate-400">数据更新时间</div><div class="mt-1 font-bold text-slate-900">{airport.lastVerified}</div></div>
+        </div>
+
+        <h2>套餐价格</h2>
+        {airport.plans.length ? (
+          <div class="not-prose my-5 overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full min-w-[640px] text-sm"><thead class="bg-slate-50"><tr><th class="px-4 py-3 text-left">套餐</th><th class="px-4 py-3 text-left">价格</th><th class="px-4 py-3 text-left">付款周期</th><th class="px-4 py-3 text-left">每月流量</th></tr></thead><tbody class="divide-y divide-slate-100">{airport.plans.map((plan) => <tr><td class="px-4 py-3 font-semibold">{plan.name}</td><td class="px-4 py-3 text-blue-700 font-bold">{formatPrice(plan)}</td><td class="px-4 py-3">{billingLabel(plan)}</td><td class="px-4 py-3">{formatTraffic(plan)}</td></tr>)}</tbody></table>
+          </div>
+        ) : null}
+
+        <h2>套餐怎么选</h2>
+        {airport.plans.length ? <ol>{airport.plans.map((plan, index) => <li><strong>{plan.name}：</strong>{planFit(plan, index)}</li>)}</ol> : <p>由于套餐数据尚未补齐，目前无法进行价格与流量差异分析。建议在官网核对后优先选择风险可控的短周期方案。</p>}
+
+        <h2>线路</h2>
+        <p>统一数据源中的公开参考线路为：<strong>{airport.capabilities.line.display}</strong>{airport.capabilities.line.protocols.length ? `；已标注协议包括 ${airport.capabilities.line.protocols.join('、')}` : ''}。{airport.capabilities.evidenceLevel === 'feidu_test' ? '该项已有飞渡机场测试记录。' : '该项属于公开资料整理；实际体验可能受到用户所在地、本地网络、使用时段及节点负载影响。'}</p>
+
+        <h2>AI 支持</h2>
+        <div class="not-prose grid grid-cols-1 sm:grid-cols-3 gap-3 my-5">{aiRows.map(([name, value]) => <div class="rounded-xl border border-slate-200 p-4"><span class="text-sm font-semibold text-slate-800">{name}</span><strong class:list={['float-right text-sm', value ? 'text-emerald-600' : 'text-red-600']}>{statusLabel(value)}</strong></div>)}</div>
+
+        <h2>流媒体支持</h2>
+        <div class="not-prose grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 my-5">{streamingRows.map(([name, value]) => <div class="rounded-xl border border-slate-200 p-4"><span class="text-sm font-semibold text-slate-800">{name}</span><strong class:list={['float-right text-sm', value ? 'text-emerald-600' : 'text-red-600']}>{statusLabel(value)}</strong></div>)}</div>
+        <p class="text-sm text-slate-500">可用性可能随节点、出口 IP 与平台策略变化，请以实际使用情况为准。</p>
+
+        <h2>现有资料中的优点</h2>
+        <ul>{advantages.map((item) => <li>{item}</li>)}</ul>
+
+        <h2>需要注意</h2>
+        <ul>{cautions.map((item) => <li>{item}</li>)}</ul>
+
+        <h2>适合什么需求</h2>
+        <p>{suitability}</p>
+
+        <h2>常见问题</h2>
+        <h3>{airport.name}目前有哪些套餐？</h3>
+        <p>{airport.plans.length ? `当前统一数据源收录 ${airport.plans.length} 档：${airport.plans.map((plan) => `${formatPrice(plan)}、${formatTraffic(plan)}`).join('；')}。` : '当前没有可展示的可靠套餐资料。'}</p>
+        <h3>{airport.name}支持 ChatGPT 吗？</h3>
+        {airport.capabilities.ai.chatgpt !== null && <p>当前状态为“{statusLabel(airport.capabilities.ai.chatgpt)}”。公开信息不等同于持续可用保证，仍可能因节点和出口 IP 改变。</p>}
+        <h3>{airport.name}的线路经过本站实测吗？</h3>
+        <p>{airport.capabilities.evidenceLevel === 'feidu_test' ? '统一数据源将该项标记为飞渡实测，但不同地区和时段仍可能产生差异。' : '当前展示的是公开资料整理；没有可靠测试记录的延迟、速度和稳定性字段不会展示。'}</p>
+        <h3>购买前还应该比较什么？</h3>
+        <p>建议同时查看<a href={`/airports/${airport.slug}/`}>{airport.name}详情页</a>、<a href="/ranking/">机场排行榜</a>和<a href="/guides/how-to-choose/">机场选购指南</a>，结合预算、流量和设备需求判断。</p>
+
+        <h2>官网入口与推广说明</h2>
+        <p>以下链接来自统一机场数据源，可能包含推广参数。本站可能获得推广收益，但不会增加你的购买价格。请在付款前自行核对官网域名、套餐和退款规则。</p>
+        <p class="not-prose"><a href={airport.officialUrl} target="_blank" rel="sponsored nofollow noopener noreferrer" class="official-link inline-flex rounded-xl px-6 py-3 text-sm font-semibold transition-colors">访问 {airport.name} 官网</a></p>
+
+        <div class="not-prose mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 border-t border-slate-200 pt-6 text-sm font-semibold"><a href={`/airports/${airport.slug}/`} class="rounded-xl bg-slate-50 p-4 text-blue-700 hover:bg-blue-50">查看机场详情 →</a><a href="/airports/" class="rounded-xl bg-slate-50 p-4 text-blue-700 hover:bg-blue-50">机场推荐列表 →</a><a href="/ranking/" class="rounded-xl bg-slate-50 p-4 text-blue-700 hover:bg-blue-50">查看排行榜 →</a></div>
+      </div>
+    </article>
+  </div>
+</Layout>

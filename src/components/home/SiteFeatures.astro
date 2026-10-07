@@ -1,0 +1,24 @@
+---
+const features = [
+  { icon: '✓', title: '数据透明', text: '公开资料与本站测试记录分开标注，不用宣传话术替代结果。' },
+  { icon: '↔', title: '维度清晰', text: '围绕价格、流量、线路、AI 与流媒体能力进行横向比较。' },
+  { icon: '↻', title: '持续更新', text: '结合套餐变化与实际体验维护推荐、实测和教程内容。' },
+];
+---
+
+<section aria-labelledby="features-title" class="bg-white border-b border-slate-200/60 py-10 sm:py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2 id="features-title" class="sr-only">网站特点</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {features.map((feature) => (
+        <article class="flex gap-4 rounded-2xl border border-slate-200 bg-slate-50/60 p-5">
+          <span class="shrink-0 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700 font-bold" aria-hidden="true">{feature.icon}</span>
+          <div class="min-w-0">
+            <h3 class="font-bold text-slate-900">{feature.title}</h3>
+            <p class="mt-1 text-xs leading-relaxed text-slate-600">{feature.text}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

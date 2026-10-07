@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+import BeginnerGuides from '@/components/home/BeginnerGuides.astro';
+
+const breadcrumbs = [{ name: '新手教程' }];
+
+const guides = await getCollection('blog', (post) => !post.data.draft && post.data.category === 'guides');
+const sortedGuides = guides.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout
+  title="新手入门教程与避坑指南 - 飞渡机场"
+  description="零基础小白使用教程，包含机场选择技巧、Clash配置、订阅更新与节点调优等合集。"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+        新手入门教程
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+        系统整理零基础入门知识，涵盖基础概念、快速配置以及常见故障排除指南。
+      </p>
+    </header>
+
+    <BeginnerGuides />
+
+    <section class="mt-16">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6">教程文章列表</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedGuides.map((post) => (
+          <ArticleCard post={post} />
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

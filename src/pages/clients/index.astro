@@ -1,0 +1,41 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import ArticleCard from '@/components/blog/ArticleCard.astro';
+import ClientTutorialsSection from '@/components/home/ClientTutorialsSection.astro';
+
+const breadcrumbs = [{ name: '客户端教程' }];
+
+const clientPosts = await getCollection('blog', (post) => !post.data.draft && post.data.category === 'clients');
+const sortedClients = clientPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Layout
+  title="客户端下载与配置使用教程 - 飞渡机场"
+  description="全平台客户端软件教程，预留 Windows, macOS, Android, iOS 的 Clash, Shadowrocket, Sing-Box 下载与配置说明。"
+>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <header class="mb-10">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">
+        全平台客户端教程
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base max-w-3xl leading-relaxed">
+        涵盖 Windows、macOS、Android 与 iOS 四大主流平台的加速客户端指南与下载配置说明。
+      </p>
+    </header>
+
+    <ClientTutorialsSection />
+
+    <section class="mt-16">
+      <h2 class="text-2xl font-bold text-slate-900 mb-6">客户端教程文章</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedClients.map((post) => (
+          <ArticleCard post={post} />
+        ))}
+      </div>
+    </section>
+  </div>
+</Layout>

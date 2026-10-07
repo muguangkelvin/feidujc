@@ -1,0 +1,28 @@
+---
+const steps = [
+  { number: '01', title: '先看流量需求', text: '根据浏览、办公或视频使用量估算月流量，避免只看套餐数字。' },
+  { number: '02', title: '再看线路和稳定性', text: '优先参考真实网络环境下的晚高峰表现和持续可用性。' },
+  { number: '03', title: '最后看实际使用场景', text: '按设备、AI 工具和流媒体需求核对兼容性，不为用不到的功能买单。' },
+];
+---
+
+<section class="py-16 bg-slate-50 border-b border-slate-200/60" aria-labelledby="choosing-title">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div>
+        <h2 id="choosing-title" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">第一次选机场？先看这 3 件事</h2>
+        <p class="text-sm text-slate-600 mt-2">先明确需求，再比较数据，最后从短周期套餐开始验证。</p>
+      </div>
+      <a href="/guides/how-to-choose/" class="text-sm font-semibold text-blue-600 hover:text-blue-700">查看完整选购指南 →</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {steps.map((step) => (
+        <article class="rounded-2xl border border-slate-200 bg-white p-6">
+          <span class="text-sm font-extrabold text-blue-600">{step.number}</span>
+          <h3 class="mt-3 text-lg font-bold text-slate-900">{step.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">{step.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

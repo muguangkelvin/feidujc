@@ -1,0 +1,41 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import { SITE } from '@/config/site';
+
+const breadcrumbs = [{ name: '关于本站' }];
+---
+
+<Layout
+  title={`关于 ${SITE.name} - 独立中文博客`}
+  description="飞渡机场是一个专注于机场推荐、实测与客户端教程的独立中文博客。"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <article class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-10 shadow-xs prose-custom max-w-none">
+      <h1>关于飞渡机场</h1>
+
+      <p class="lead">
+        <strong>飞渡机场</strong>是一个独立中文博客，旨在为广大网络使用者提供客观、透明、可验证的机场测评、排行榜与上手教程。
+      </p>
+
+      <h2>本站的独立运营原则</h2>
+
+      <ol>
+        <li><strong>数据透明原则</strong>：公开资料与本站测试记录分开标注；没有可靠依据的测速字段不展示，决不盲目虚构线路类型与评分。</li>
+        <li><strong>阅读体验优先</strong>：全站视觉采用现代干净的卡片式设计，留白充足，无广告弹窗，无廉价霓虹灯效与关键字堆砌。</li>
+        <li><strong>实战向导导向</strong>：不仅提供选购指南，更专注于 Windows、macOS、Android、iOS 等全平台客户端（Clash / Shadowrocket / Sing-Box）的真正落地方案。</li>
+      </ol>
+
+      <h2>联系与合作</h2>
+
+      <p>
+        如有测试日志更正、节点架构补充或技术交流需求，欢迎关注本站最新文章更新。
+      </p>
+
+      <h2>推广关系说明</h2>
+      <p>部分外部链接可能包含推广参数。如果通过这些链接注册，本站可能获得推广收益，但不会因此增加你的购买价格。推广关系不会改变本站对无可靠依据字段不展示、不虚构的原则。</p>
+    </article>
+  </div>
+</Layout>

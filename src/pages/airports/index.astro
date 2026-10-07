@@ -1,0 +1,185 @@
+---
+import Layout from '@/layouts/Layout.astro';
+import Breadcrumbs from '@/components/common/Breadcrumbs.astro';
+import { AIRPORTS, formatPrice, formatTraffic, getHomepageCapabilitySummary, getLowestEntryPlan, monthlyEquivalent } from '@/data/airports';
+const airports=[...AIRPORTS].sort((a,b)=>a.rank-b.rank);
+---
+<Layout title="机场推荐与套餐对比" description="浏览飞渡机场收录的机场套餐，按推荐顺序、付款周期、价格与流量筛选比较。" canonicalUrl="https://feidujc.com/airports/">
+  <div class="airport-sky relative isolate overflow-hidden">
+    <div class="airport-sky-glow" aria-hidden="true"></div>
+    <div class="airport-clouds" aria-hidden="true">
+      <span class="airport-cloud cloud-one"></span>
+      <span class="airport-cloud cloud-two"></span>
+      <span class="airport-cloud cloud-three"></span>
+      <span class="airport-cloud cloud-four"></span>
+    </div>
+    <svg class="airport-routes" viewBox="0 0 1600 980" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+      <path id="airport-main-route" class="airport-route route-one" d="M-100 360 C230 70 520 92 790 230 S1260 470 1710 105" />
+      <path class="airport-route route-two" d="M-80 750 C330 520 610 610 890 470 S1320 155 1700 330" />
+      <path class="airport-route route-three" d="M1180 -60 C1080 170 1220 310 1600 480" />
+      <g class="airport-route-nodes">
+        <circle cx="252" cy="145" r="4" />
+        <circle class="node-pulse node-delay" cx="786" cy="228" r="5" />
+        <circle cx="1320" cy="335" r="4" />
+        <circle class="node-pulse" cx="1450" cy="194" r="5" />
+      </g>
+      <g class="airport-plane">
+        <path d="M2 12 22 3l-6.5 18-4.3-6.1L6 18l1.7-6.4L2 12Z" fill="currentColor" />
+        <animateMotion dur="26s" repeatCount="indefinite" rotate="auto" path="M-100 360 C230 70 520 92 790 230 S1260 470 1710 105" />
+      </g>
+    </svg>
+    <div class="airport-content relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <Breadcrumbs items={[{name:'机场推荐'}]} />
+    <header class="mb-8"><h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900">机场推荐与套餐对比</h1><p class="mt-3 text-sm sm:text-base text-slate-600 max-w-3xl">共收录 {airports.length} 个机场。价格和流量来自已录入套餐；线路、AI 与流媒体为公开参考，实际可用性仍需自行验证。</p></header>
+    <aside class="rounded-2xl bg-blue-50 border border-blue-100 p-4 text-xs leading-relaxed text-blue-900 mb-6">推广说明：部分外部链接可能包含推广参数。如果通过这些链接注册，本站可能获得推广收益，但不会因此增加你的购买价格。</aside>
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 mb-6 space-y-4">
+      <div class="flex flex-wrap gap-2" role="group" aria-label="机场筛选">{[['all','全部'],['top6','TOP 6'],['month','月付'],['year','年付'],['under20','¥20及以下'],['20to50','¥20-50'],['large','大流量']].map(([v,l])=><button type="button" data-filter={v} class={`airport-filter px-3 py-2 rounded-lg text-xs font-semibold border transition-colors ${v==='all'?'bg-blue-600 text-white border-blue-600':'bg-white text-slate-600 border-slate-200'}`}>{l}</button>)}</div>
+      <label class="flex items-center gap-3 text-xs text-slate-600">排序<select id="airport-sort" class="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800"><option value="rank">推荐排序</option><option value="price">最低价格</option><option value="traffic">流量</option></select></label>
+    </div>
+    <p id="airport-count" class="text-xs text-slate-500 mb-4">显示 {airports.length} 个机场</p>
+    <div id="airport-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">{airports.map(a=>{const p=getLowestEntryPlan(a); const trafficValues=a.plans.map(x=>x.traffic*(x.trafficUnit==='TB'?1024:1)); const maxTraffic=trafficValues.length?Math.max(...trafficValues):0; return <article data-airport data-rank={a.rank} data-price={p?.price??Number.MAX_SAFE_INTEGER} data-traffic={maxTraffic} data-top6={a.featured?'true':'false'} data-month={a.plans.some(x=>x.billingCycle==='month')?'true':'false'} data-year={a.plans.some(x=>x.billingCycle==='year')?'true':'false'} data-under20={a.plans.some(x=>monthlyEquivalent(x)<=20)?'true':'false'} data-20to50={a.plans.some(x=>monthlyEquivalent(x)>20&&monthlyEquivalent(x)<=50)?'true':'false'} data-large={maxTraffic>=500?'true':'false'} class="airport-card rounded-2xl border border-slate-200 bg-white p-5 shadow-xs flex flex-col justify-between"><div><div class="flex justify-between gap-3"><div><span class="text-[11px] font-bold text-blue-600">#{a.rank}</span><h2 class="font-bold text-lg text-slate-900">{a.name}</h2>{a.englishName&&<p class="text-[11px] text-slate-400">{a.englishName}</p>}</div>{a.featured&&<span class="h-fit rounded-full bg-blue-50 text-blue-700 px-2 py-1 text-[10px] font-bold">TOP 6</span>}</div><p class="mt-3 text-xs text-slate-600 leading-relaxed">{a.description}</p><div class="grid grid-cols-2 gap-2 mt-4"><div class="rounded-lg bg-blue-50 p-3"><span class="block text-[10px] text-blue-600">最低入门价</span><strong class="text-blue-800">{formatPrice(p)}</strong></div><div class="rounded-lg bg-slate-50 p-3"><span class="block text-[10px] text-slate-500">对应流量</span><strong>{formatTraffic(p)}</strong></div></div><dl class="mt-4 space-y-2 border-t border-slate-100 pt-3 text-xs"><div class="flex min-w-0 justify-between gap-3"><dt class="shrink-0 text-slate-400">线路</dt><dd class="min-w-0 truncate text-right" title={a.capabilities.line.display}>{a.capabilities.line.display}</dd></div><div class="flex min-w-0 justify-between gap-3"><dt class="shrink-0 text-slate-400">AI / 流媒体</dt><dd class="min-w-0 truncate text-right">{getHomepageCapabilitySummary(a)}</dd></div></dl></div><div class="grid grid-cols-2 gap-2 mt-5"><a href={`/airports/${a.slug}/`} class="text-center rounded-lg bg-slate-100 px-3 py-2 text-xs font-semibold text-slate-700">查看详情</a><a href={a.officialUrl} target="_blank" rel="sponsored nofollow noopener noreferrer" class="official-link text-center rounded-lg px-3 py-2 text-xs font-semibold transition-colors">访问官网</a></div></article>})}</div>
+    <div id="airport-empty" class="hidden rounded-2xl border border-slate-200 bg-white p-10 text-center text-sm text-slate-500">没有符合当前条件的机场。</div>
+    </div>
+  </div>
+</Layout>
+<script>
+  const grid=document.querySelector('#airport-grid'); const cards=[...document.querySelectorAll<HTMLElement>('[data-airport]')]; const count=document.querySelector('#airport-count'); const empty=document.querySelector('#airport-empty'); let active='all';
+  function update(){const visible=cards.filter(c=>active==='all'||c.dataset[active]==='true'); cards.forEach(c=>c.classList.toggle('hidden',!visible.includes(c))); const sort=(document.querySelector('#airport-sort') as HTMLSelectElement)?.value||'rank'; visible.sort((a,b)=>Number(b.dataset[sort])-Number(a.dataset[sort])); if(sort!=='traffic')visible.reverse(); visible.forEach(c=>grid?.appendChild(c)); if(count)count.textContent=`显示 ${visible.length} 个机场`; empty?.classList.toggle('hidden',visible.length>0);}
+  document.querySelectorAll<HTMLButtonElement>('.airport-filter').forEach(b=>b.addEventListener('click',()=>{active=b.dataset.filter||'all';document.querySelectorAll('.airport-filter').forEach(x=>x.className='airport-filter px-3 py-2 rounded-lg text-xs font-semibold border transition-colors bg-white text-slate-600 border-slate-200');b.className='airport-filter px-3 py-2 rounded-lg text-xs font-semibold border transition-colors bg-blue-600 text-white border-blue-600';update()}));
+  document.querySelector('#airport-sort')?.addEventListener('change',update);
+</script>
+
+<style>
+  .airport-sky {
+    min-height: 100%;
+    background:
+      radial-gradient(circle at 12% 8%, rgb(96 165 250 / 0.11), transparent 28rem),
+      radial-gradient(circle at 92% 24%, rgb(59 130 246 / 0.08), transparent 32rem),
+      linear-gradient(155deg, #fff 0%, #f3f8ff 25%, #eaf4ff 51%, #f8fbff 74%, #fff 100%);
+  }
+
+  .airport-sky-glow,
+  .airport-clouds,
+  .airport-routes {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .airport-sky-glow {
+    z-index: -3;
+    background: radial-gradient(ellipse at 50% 9%, rgb(255 255 255 / 0.88) 0 19rem, transparent 38rem);
+  }
+
+  .airport-clouds {
+    z-index: -2;
+  }
+
+  .airport-cloud {
+    position: absolute;
+    display: block;
+    width: 25rem;
+    height: 8rem;
+    border-radius: 999px;
+    opacity: 0.13;
+    background:
+      radial-gradient(ellipse at 28% 62%, #60a5fa 0 18%, transparent 19%),
+      radial-gradient(ellipse at 48% 44%, #93c5fd 0 25%, transparent 26%),
+      radial-gradient(ellipse at 70% 65%, #60a5fa 0 22%, transparent 23%);
+    filter: blur(13px);
+    will-change: transform;
+  }
+
+  .cloud-one { top: 4rem; left: -13rem; --cloud-distance: 34vw; animation: airport-cloud-drift 44s ease-in-out infinite alternate; }
+  .cloud-two { top: 18rem; right: -12rem; --cloud-distance: -29vw; animation: airport-cloud-drift 63s ease-in-out infinite alternate; }
+  .cloud-three { top: 47rem; left: -15rem; --cloud-distance: 38vw; animation: airport-cloud-drift 82s ease-in-out infinite alternate; }
+  .cloud-four { top: 76rem; right: -13rem; --cloud-distance: -32vw; animation: airport-cloud-drift 71s ease-in-out infinite alternate; }
+
+  .airport-routes {
+    z-index: -1;
+    width: 100%;
+    height: min(76rem, 72%);
+    overflow: visible;
+  }
+
+  .airport-route {
+    fill: none;
+    stroke: #2563eb;
+    stroke-width: 1.25;
+    stroke-linecap: round;
+    stroke-dasharray: 8 14;
+    opacity: 0.17;
+    animation: airport-route-flow 30s linear infinite;
+  }
+
+  .route-two { opacity: 0.12; animation-duration: 38s; }
+  .route-three { opacity: 0.14; animation-duration: 34s; }
+
+  .airport-route-nodes {
+    fill: #3b82f6;
+    opacity: 0.24;
+  }
+
+  .node-pulse {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: airport-node-breathe 5.5s ease-in-out infinite;
+  }
+
+  .node-delay { animation-delay: -2.6s; }
+
+  .airport-plane {
+    color: #2563eb;
+    opacity: 0.58;
+  }
+
+  @keyframes airport-cloud-drift {
+    from { transform: translate3d(0, 0, 0) scale(0.94); }
+    to { transform: translate3d(var(--cloud-distance), 0, 0) scale(1.04); }
+  }
+
+  @keyframes airport-route-flow {
+    to { stroke-dashoffset: -88; }
+  }
+
+  @keyframes airport-node-breathe {
+    0%, 100% { opacity: 0.42; transform: scale(0.86); }
+    50% { opacity: 0.82; transform: scale(1.14); }
+  }
+
+  @media (max-width: 640px) {
+    .airport-sky {
+      background:
+        radial-gradient(circle at 14% 7%, rgb(96 165 250 / 0.09), transparent 18rem),
+        linear-gradient(160deg, #fff 0%, #f1f7ff 34%, #edf6ff 58%, #fff 100%);
+    }
+
+    .cloud-two,
+    .cloud-four,
+    .route-two,
+    .route-three,
+    .airport-route-nodes circle:nth-child(n + 3) {
+      display: none;
+    }
+
+    .airport-cloud { width: 18rem; height: 6rem; opacity: 0.1; }
+    .cloud-one { left: -10rem; --cloud-distance: 52vw; }
+    .cloud-three { left: -12rem; --cloud-distance: 58vw; }
+    .airport-routes { width: 150%; height: 44rem; transform: translateX(-17%); }
+    .route-one { opacity: 0.13; }
+    .airport-plane { opacity: 0.5; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .airport-cloud,
+    .airport-route,
+    .node-pulse {
+      animation: none !important;
+    }
+
+    .airport-plane {
+      display: none;
+    }
+  }
+</style>
+

@@ -1,0 +1,200 @@
+---
+// Hero component for Homepage
+---
+
+<section class="hero-sky relative py-12 sm:py-16 overflow-hidden border-b border-slate-200/60">
+  <div class="hero-glow" aria-hidden="true"></div>
+  <div class="hero-clouds" aria-hidden="true">
+    <span class="hero-cloud cloud-one"></span>
+    <span class="hero-cloud cloud-two"></span>
+    <span class="hero-cloud cloud-three"></span>
+    <span class="hero-cloud cloud-four"></span>
+    <span class="hero-cloud cloud-five"></span>
+  </div>
+  <svg class="hero-routes" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path class="route-line route-primary" pathLength="1" d="M-90 235 C250 18 920 15 1530 165"></path>
+    <path class="route-line route-secondary" pathLength="1" d="M-80 72 C330 176 1080 180 1510 35"></path>
+  </svg>
+  <svg class="hero-plane-layer" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g class="hero-plane">
+      <path d="M-10 -7 12 0-10 7-5 1-10-7Z" fill="currentColor"></path>
+      <path d="M-5 1 2 0-4 5Z" fill="white" fill-opacity=".75"></path>
+      <animateMotion dur="24s" repeatCount="indefinite" rotate="auto" path="M-90 235 C250 18 920 15 1530 165"></animateMotion>
+    </g>
+  </svg>
+  <div class="hero-center-veil" aria-hidden="true"></div>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+    <!-- Top Pill Badge -->
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/80 text-blue-700 text-xs font-semibold mb-6 border border-blue-200 shadow-xs">
+      <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+      <span>2026 飞渡机场 · 机场推荐与使用指南</span>
+    </div>
+
+    <!-- Main Title -->
+    <h1 class="text-[clamp(2rem,9vw,3rem)] sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight sm:leading-tight mb-6 max-w-4xl mx-auto [text-wrap:balance]">
+      飞渡机场｜2026 机场推荐与实测对比指南
+    </h1>
+
+    <!-- Subtitle -->
+    <p class="text-base sm:text-lg text-slate-600 max-w-4xl mx-auto leading-relaxed mb-8 sm:mb-10 font-normal [text-wrap:pretty] break-words">
+      飞渡机场专注机场推荐、套餐对比与使用指南，从价格、流量、线路、AI 支持和流媒体等维度整理机场信息，帮助新手更直观地比较不同机场，找到适合自己预算与使用需求的选择。
+    </p>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-4">
+      <a
+        href="#recommended"
+        class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-blue-600 text-white font-semibold text-sm shadow-md hover:bg-blue-700 hover:shadow-lg transition-all"
+      >
+        查看机场推荐
+        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+        </svg>
+      </a>
+      <a
+        href="/guides/"
+        class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-white border border-slate-300 text-slate-700 font-semibold text-sm shadow-xs hover:bg-slate-50 hover:text-slate-900 transition-all"
+      >
+        新手入门
+        <svg class="w-4 h-4 ml-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Key Metrics Highlights -->
+    <div class="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 max-w-4xl mx-auto pt-6 border-t border-slate-200/80">
+      <div class="p-4 rounded-xl bg-white/70 backdrop-blur border border-slate-200/60 shadow-2xs">
+        <div class="text-xs text-slate-500 mb-1">测评维度</div>
+        <div class="text-sm sm:text-base font-bold text-slate-800">线路 / AI / 流媒体</div>
+      </div>
+      <div class="p-4 rounded-xl bg-white/70 backdrop-blur border border-slate-200/60 shadow-2xs">
+        <div class="text-xs text-slate-500 mb-1">数据透明</div>
+        <div class="text-sm sm:text-base font-bold text-slate-800">拒绝编造数据</div>
+      </div>
+      <div class="p-4 rounded-xl bg-white/70 backdrop-blur border border-slate-200/60 shadow-2xs">
+        <div class="text-xs text-slate-500 mb-1">多端指南</div>
+        <div class="flex flex-wrap items-center justify-center gap-x-1 text-sm sm:text-base font-bold text-slate-800 min-w-0">
+          <span class="whitespace-nowrap">Windows</span><span aria-hidden="true">/</span><span class="whitespace-nowrap">Mac</span><span aria-hidden="true">/</span><span class="whitespace-nowrap">iOS</span><span aria-hidden="true">/</span><span class="whitespace-nowrap">安卓</span>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl bg-white/70 backdrop-blur border border-slate-200/60 shadow-2xs">
+        <div class="text-xs text-slate-500 mb-1">更新维护</div>
+        <div class="text-sm sm:text-base font-bold text-slate-800">2026 最新版</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-sky {
+    isolation: isolate;
+    background:
+      linear-gradient(180deg, #ffffff 0%, #f2f7ff 48%, #f7faff 100%);
+  }
+
+  .hero-glow,
+  .hero-center-veil,
+  .hero-clouds,
+  .hero-routes,
+  .hero-plane-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .hero-glow {
+    z-index: 0;
+    background:
+      radial-gradient(circle at 10% 8%, rgb(96 165 250 / 0.12), transparent 30%),
+      radial-gradient(circle at 88% 88%, rgb(59 130 246 / 0.09), transparent 32%);
+  }
+
+  .hero-center-veil {
+    z-index: 4;
+    background: radial-gradient(ellipse 48% 62% at 50% 40%, rgb(255 255 255 / 0.76), rgb(255 255 255 / 0.28) 58%, transparent 82%);
+  }
+
+  .hero-clouds {
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-cloud {
+    position: absolute;
+    width: 250px;
+    height: 72px;
+    border-radius: 999px;
+    opacity: 0.18;
+    background:
+      radial-gradient(circle at 24% 62%, #fff 0 29%, transparent 30%),
+      radial-gradient(circle at 46% 40%, #fff 0 39%, transparent 40%),
+      radial-gradient(circle at 70% 62%, #fff 0 31%, transparent 32%),
+      linear-gradient(90deg, transparent 5%, #fff 18% 82%, transparent 95%);
+    filter: blur(1px);
+    will-change: transform;
+  }
+
+  .cloud-one { top: 8%; left: -18%; transform: scale(.9); animation: cloud-drift 42s linear infinite; }
+  .cloud-two { top: 23%; left: 20%; transform: scale(.65); opacity: .12; animation: cloud-drift 58s linear -22s infinite; }
+  .cloud-three { top: 5%; left: 63%; transform: scale(.8); opacity: .15; animation: cloud-drift 76s linear -39s infinite; }
+  .cloud-four { bottom: 17%; left: -9%; transform: scale(1.05); opacity: .11; animation: cloud-drift 86s linear -47s infinite; }
+  .cloud-five { bottom: 7%; left: 74%; transform: scale(.72); opacity: .13; animation: cloud-drift 64s linear -31s infinite; }
+
+  .hero-routes,
+  .hero-plane-layer {
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+  }
+
+  .route-line {
+    fill: none;
+    stroke: #2563eb;
+    stroke-width: 1.25;
+    stroke-linecap: round;
+    stroke-dasharray: .012 .022;
+    vector-effect: non-scaling-stroke;
+    animation: route-flow 18s linear infinite;
+  }
+
+  .route-primary { opacity: .22; }
+  .route-secondary { opacity: .12; animation-duration: 25s; animation-direction: reverse; }
+
+  .hero-plane-layer { z-index: 3; color: #2563eb; }
+  .hero-plane { opacity: .62; filter: drop-shadow(0 2px 4px rgb(37 99 235 / .16)); }
+
+  @keyframes cloud-drift {
+    from { transform: translate3d(-18vw, 0, 0) scale(var(--cloud-scale, 1)); }
+    to { transform: translate3d(128vw, 0, 0) scale(var(--cloud-scale, 1)); }
+  }
+
+  @keyframes route-flow {
+    to { stroke-dashoffset: -1; }
+  }
+
+  .cloud-one { --cloud-scale: .9; }
+  .cloud-two { --cloud-scale: .65; }
+  .cloud-three { --cloud-scale: .8; }
+  .cloud-four { --cloud-scale: 1.05; }
+  .cloud-five { --cloud-scale: .72; }
+
+  @media (max-width: 640px) {
+    .hero-center-veil {
+      background: radial-gradient(ellipse 72% 66% at 50% 38%, rgb(255 255 255 / .82), rgb(255 255 255 / .32) 64%, transparent 88%);
+    }
+    .cloud-two,
+    .cloud-four,
+    .cloud-five,
+    .route-secondary { display: none; }
+    .hero-cloud { opacity: .12; }
+    .route-primary { opacity: .14; }
+    .hero-plane { opacity: .5; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cloud,
+    .route-line { animation: none !important; }
+    .hero-plane-layer { display: none; }
+  }
+</style>

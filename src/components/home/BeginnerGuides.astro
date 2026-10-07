@@ -1,0 +1,47 @@
+---
+const beginnerCards = [
+  { title: '机场是什么', href: '/guides/what-is-airport/', icon: '✈' },
+  { title: '如何选择机场', href: '/guides/how-to-choose/', icon: '✓' },
+  { title: '订阅链接怎么使用', href: '/guides/how-to-use-subscription/', icon: '↗' },
+  { title: 'Clash 使用教程', href: '/guides/clash-guide/', icon: '⚡' },
+  { title: '节点怎么选择', href: '/guides/how-to-choose-node/', icon: '◎' },
+  { title: 'Windows 教程', href: '/clients/windows/', icon: '▦' },
+  { title: 'Android 教程', href: '/clients/android/', icon: 'A' },
+  { title: 'iOS 教程', href: '/clients/ios/', icon: 'i' },
+  { title: 'macOS 教程', href: '/clients/macos/', icon: '⌘' },
+];
+---
+
+<section id="beginner-guides" class="py-16 bg-white border-b border-slate-200/60">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          新手教程
+        </h2>
+        <p class="text-sm text-slate-600 mt-2">
+          清晰简明的指引向导，帮助新手快速掌握加速技巧与避坑知识
+        </p>
+      </div>
+      <a href="/guides/" class="inline-flex items-center text-xs font-semibold text-blue-600 hover:text-blue-700">
+        查看全部新手教程 →
+      </a>
+    </div>
+
+    <!-- Beginner Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      {
+        beginnerCards.map((card) => (
+          <a
+            href={card.href}
+            class="bg-slate-50/70 hover:bg-white rounded-xl border border-slate-200 p-4 hover:shadow-sm hover:border-blue-300 transition-all group flex items-center gap-3 min-w-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+          >
+            <span class="shrink-0 h-9 w-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-blue-600 font-bold">{card.icon}</span>
+            <h3 class="min-w-0 flex-1 text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{card.title}</h3>
+            <span class="shrink-0 text-blue-600 transition-transform group-hover:translate-x-0.5" aria-hidden="true">→</span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>
